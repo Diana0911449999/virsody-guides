@@ -18,6 +18,7 @@
         <p class="intro">點選播放按鈕，即可一邊觀看展板，一邊收聽導覽並閱讀同步字幕。</p>
         <div id="subtitle" class="subtitle" aria-live="polite">點選下方按鈕開始語音導覽。</div>
         <audio id="audio" preload="metadata" src="narration-01.mp3"></audio>
+        <audio id="outro" preload="metadata" src="outro-01.mp3"></audio>
         <div class="controls">
           <button id="play" class="play" type="button" aria-label="播放導覽">▶</button>
           <div class="progress">
@@ -42,16 +43,26 @@
     [47.684,51.486,"第三項是「師生專業證照補助」。"],
     [51.486,57.013,"透過經費支持，鼓勵師生取得產業認可的專業證照。"],
     [57.013,62.513,"共補助二百九十九人，並有一百四十三人順利取證。"],
-    [62.513,72.578,"這些措施將專業課程、產業實務與證照能力緊密串聯，持續提升學生的職場適應力與就業競爭力。"]
+    [62.513,72.578,"這些措施將專業課程、產業實務與證照能力緊密串聯，持續提升學生的職場適應力與就業競爭力。"],
+    [72.578,77.483,"以上是系所補助方案的介紹，感謝您的聆聽。"]
   ];
-  const audio=document.getElementById('audio'),play=document.getElementById('play'),seek=document.getElementById('seek'),sub=document.getElementById('subtitle'),now=document.getElementById('now'),total=document.getElementById('total');
+  const audio=document.getElementById('audio'),outro=document.getElementById('outro'),play=document.getElementById('play'),seek=document.getElementById('seek'),sub=document.getElementById('subtitle'),now=document.getElementById('now'),total=document.getElementById('total');
+  let phase='main';
   const fmt=v=>`${Math.floor(v/60)}:${String(Math.floor(v%60)).padStart(2,'0')}`;
-  play.onclick=async()=>audio.paused?audio.play():audio.pause();
-  seek.oninput=()=>audio.currentTime=Number(seek.value);
+  const duration=()=>Number.isFinite(audio.duration)&&Number.isFinite(outro.duration)?audio.duration+outro.duration:77.483;
+  const update=t=>{seek.max=duration();seek.value=t;now.textContent=fmt(t);total.textContent=fmt(duration());const cue=cues.find(c=>t>=c[0]&&t<=c[1]);sub.textContent=cue?cue[2]:(t>=duration()?'感謝您的聆聽。':'點選下方按鈕開始語音導覽。')};
+  play.onclick=async()=>{const active=phase==='main'?audio:outro;active.paused?active.play():active.pause()};
+  seek.oninput=()=>{const t=Number(seek.value);if(t<=audio.duration){phase='main';outro.pause();audio.currentTime=t}else{phase='outro';audio.pause();audio.currentTime=audio.duration;outro.currentTime=t-audio.duration}update(t)};
   audio.onplay=()=>{play.textContent='Ⅱ';play.setAttribute('aria-label','暫停導覽')};
   audio.onpause=()=>{play.textContent='▶';play.setAttribute('aria-label','播放導覽')};
-  audio.onloadedmetadata=()=>{seek.max=audio.duration;total.textContent=fmt(audio.duration)};
-  audio.ontimeupdate=()=>{const t=audio.currentTime;seek.value=t;now.textContent=fmt(t);const cue=cues.find(c=>t>=c[0]&&t<=c[1]);sub.textContent=cue?cue[2]:(t>=audio.duration?'導覽播放完畢。':'點選下方按鈕開始語音導覽。')};
+  outro.onplay=()=>{play.textContent='Ⅱ';play.setAttribute('aria-label','暫停導覽')};
+  outro.onpause=()=>{play.textContent='▶';play.setAttribute('aria-label','播放導覽')};
+  audio.onloadedmetadata=()=>update(0);
+  outro.onloadedmetadata=()=>update(0);
+  audio.ontimeupdate=()=>{if(phase==='main')update(audio.currentTime)};
+  outro.ontimeupdate=()=>{if(phase==='outro')update(audio.duration+outro.currentTime)};
+  audio.onended=async()=>{phase='outro';outro.currentTime=0;await outro.play()};
+  outro.onended=()=>{update(duration());sub.textContent='以上是系所補助方案的介紹，感謝您的聆聽。'};
   </script>
 </body>
 </html>

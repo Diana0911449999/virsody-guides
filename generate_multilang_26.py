@@ -1,3 +1,4 @@
+# Guide 26 multilingual build source.
 import argparse
 import json
 import os

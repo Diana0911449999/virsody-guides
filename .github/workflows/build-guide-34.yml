@@ -1,0 +1,32 @@
+name: Build multilingual guide 34
+on:
+  push:
+    branches: [main]
+    paths:
+      - generate_multilang_34.py
+      - 34-formal.html
+      - poster-34-source.jpg
+      - .github/workflows/build-guide-34.yml
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install speech generator
+        run: python -m pip install edge-tts
+      - name: Generate audio, subtitles, and page
+        run: python generate_multilang_34.py
+      - name: Remove temporary narration sources
+        run: rm -f narration-34-*.txt narration-34-*.srt poster-34-source.jpg 34-formal.html generate_multilang_34.py
+      - name: Commit generated guide
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 34.html languages-34.js narration-34-*.mp3 poster-34.jpg
+          git commit -m "Add multilingual guide 34"
+          git push

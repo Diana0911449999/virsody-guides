@@ -44,10 +44,20 @@ def main():
     shutil.copy2(POSTER_SOURCE, OUT / "poster-35.jpg")
     html = (OUT / "34.html").read_text(encoding="utf-8")
     html = re.sub(r"<title>.*?</title>", f"<title>{languages['zh-TW']['title']}｜Audio Guide</title>", html, count=1)
-    html = re.sub(r'(<figure class="poster"><img src=")[^"]+(" alt=")[^"]+(">)',
-                  rf'\1poster-35.jpg?v=1\2{languages["zh-TW"]["title"]}\3', html, count=1)
+    html = re.sub(
+        r'(<figure class="poster"><img src=")[^"]+(" alt=")[^"]+(">)',
+        lambda match: match.group(1) + "poster-35.jpg?v=1" + match.group(2)
+        + languages["zh-TW"]["title"] + match.group(3),
+        html,
+        count=1,
+    )
     html = re.sub(r'(<p id="eyebrow" class="eyebrow">).*?(</p>)', r'\1GUIDE 35\2', html, count=1)
-    html = re.sub(r'(<h1 id="title">).*?(</h1>)', rf'\1{languages["zh-TW"]["title"]}\2', html, count=1)
+    html = re.sub(
+        r'(<h1 id="title">).*?(</h1>)',
+        lambda match: match.group(1) + languages["zh-TW"]["title"] + match.group(2),
+        html,
+        count=1,
+    )
     options = "".join(f'<option value="{code}">{item["label"]}</option>' for code, item in languages.items())
     html = re.sub(r'(<select id="language">).*?(</select>)', rf'\1{options}\2', html, count=1, flags=re.S)
     html = re.sub(r'languages-34\.js\?v=\d+', "languages-35.js?v=1", html, count=1)

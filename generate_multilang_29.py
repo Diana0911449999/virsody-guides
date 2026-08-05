@@ -56,7 +56,7 @@ def main():
         for cue in cues:
             for formal, pronunciation in SPOKEN[code].items():
                 cue[2] = cue[2].replace(pronunciation, formal)
-        item["audio"] = audio_path.name + "?v=1"
+        item["audio"] = audio_path.name + "?v=2"
         item["cues"] = cues
 
     (OUT / "languages-29.js").write_text(
@@ -66,7 +66,7 @@ def main():
     html = (OUT / "25.html").read_text(encoding="utf-8")
     html = re.sub(r"<title>.*?</title>", f"<title>{languages['zh-TW']['title']} Audio Guide</title>", html, count=1)
     html = re.sub(r'(<figure class="poster"><img src=")[^"]+(" alt=")[^"]+(">)',
-                  rf'\1poster-29.jpg?v=1\2{languages["zh-TW"]["title"]}\3', html, count=1)
+                  rf'\1poster-29.jpg?v=2\2{languages["zh-TW"]["title"]}\3', html, count=1)
     html = re.sub(r'(<p id="eyebrow" class="eyebrow">).*?(</p>)', r'\1GUIDE 29\2', html, count=1)
     html = re.sub(r'(<h1 id="title">).*?(</h1>)', rf'\1{languages["zh-TW"]["title"]}\2', html, count=1)
     options = "".join(
@@ -74,8 +74,8 @@ def main():
         for code, item in languages.items()
     )
     html = re.sub(r'(<select id="language">).*?(</select>)', rf'\1{options}\2', html, count=1, flags=re.S)
-    html = re.sub(r'languages-25\.js\?v=\d+', "languages-29.js?v=1", html, count=1)
-    html = re.sub(r'narration-25-zh-TW\.mp3\?v=\d+', "narration-29-zh-TW.mp3?v=1", html, count=1)
+    html = re.sub(r'languages-25\.js\?v=\d+', "languages-29.js?v=2", html, count=1)
+    html = re.sub(r'narration-25-zh-TW\.mp3\?v=\d+', "narration-29-zh-TW.mp3?v=2", html, count=1)
     duration = languages["zh-TW"]["cues"][-1][1]
     html = re.sub(r'max="[0-9.]+"', f'max="{duration}"', html, count=1)
     html = re.sub(r'id="total">\d+:\d+', f'id="total">{int(duration // 60)}:{int(duration % 60):02d}', html, count=1)

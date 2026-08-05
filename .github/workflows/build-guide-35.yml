@@ -1,0 +1,32 @@
+name: Build multilingual guide 35
+on:
+  push:
+    branches: [main]
+    paths:
+      - generate_multilang_35.py
+      - 35-formal.html
+      - poster-35-source.jpg
+      - .github/workflows/build-guide-35.yml
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install speech generator
+        run: python -m pip install edge-tts
+      - name: Generate audio, subtitles, and page
+        run: python generate_multilang_35.py
+      - name: Remove temporary narration sources
+        run: rm -f narration-35-*.txt narration-35-*.srt poster-35-source.jpg 35-formal.html generate_multilang_35.py
+      - name: Commit generated guide
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 35.html languages-35.js narration-35-*.mp3 poster-35.jpg
+          git commit -m "Add multilingual guide 35"
+          git push

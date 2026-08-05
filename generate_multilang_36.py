@@ -35,7 +35,7 @@ def main():
             sys.executable, "-m", "edge_tts", "-f", str(text_path), "-v", VOICES[code],
             "--rate=+10%", "--write-media", str(audio_path), "--write-subtitles", str(srt_path)
         ], check=True, env=env)
-        item["audio"] = audio_path.name + "?v=1"
+        item["audio"] = audio_path.name + "?v=2"
         item["cues"] = helper.read_cues(srt_path)
 
     (OUT / "languages-36.js").write_text(
@@ -46,7 +46,7 @@ def main():
     html = re.sub(r"<title>.*?</title>", f"<title>{languages['zh-TW']['title']}｜Audio Guide</title>", html, count=1)
     html = re.sub(
         r'(<figure class="poster"><img src=")[^"]+(" alt=")[^"]+(">)',
-        lambda match: match.group(1) + "poster-36.jpg?v=1" + match.group(2)
+        lambda match: match.group(1) + "poster-36.jpg?v=2" + match.group(2)
         + languages["zh-TW"]["title"] + match.group(3),
         html,
         count=1,
@@ -60,8 +60,8 @@ def main():
     )
     options = "".join(f'<option value="{code}">{item["label"]}</option>' for code, item in languages.items())
     html = re.sub(r'(<select id="language">).*?(</select>)', rf'\1{options}\2', html, count=1, flags=re.S)
-    html = re.sub(r'languages-35\.js\?v=\d+', "languages-36.js?v=1", html, count=1)
-    html = re.sub(r'narration-35-zh-TW\.mp3\?v=\d+', "narration-36-zh-TW.mp3?v=1", html, count=1)
+    html = re.sub(r'languages-35\.js\?v=\d+', "languages-36.js?v=2", html, count=1)
+    html = re.sub(r'narration-35-zh-TW\.mp3\?v=\d+', "narration-36-zh-TW.mp3?v=2", html, count=1)
     duration = languages["zh-TW"]["cues"][-1][1]
     html = re.sub(r'max="[0-9.]+"', f'max="{duration}"', html, count=1)
     html = re.sub(r'id="total">\d+:\d+', f'id="total">{int(duration // 60)}:{int(duration % 60):02d}', html, count=1)

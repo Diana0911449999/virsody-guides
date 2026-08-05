@@ -59,6 +59,11 @@ def main():
                   rf'\1poster-28.jpg?v=1\2{languages["zh-TW"]["title"]}\3', html, count=1)
     html = re.sub(r'(<p id="eyebrow" class="eyebrow">).*?(</p>)', r'\1GUIDE 28\2', html, count=1)
     html = re.sub(r'(<h1 id="title">).*?(</h1>)', rf'\1{languages["zh-TW"]["title"]}\2', html, count=1)
+    options = "".join(
+        f'<option value="{code}">{item["label"]}</option>'
+        for code, item in languages.items()
+    )
+    html = re.sub(r'(<select id="language">).*?(</select>)', rf'\1{options}\2', html, count=1, flags=re.S)
     html = re.sub(r'languages-25\.js\?v=\d+', "languages-28.js?v=1", html, count=1)
     html = re.sub(r'narration-25-zh-TW\.mp3\?v=\d+', "narration-28-zh-TW.mp3?v=1", html, count=1)
     duration = languages["zh-TW"]["cues"][-1][1]

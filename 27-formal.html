@@ -1,0 +1,159 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>智慧校園網路、Adobe授權與雲端服務成果｜Audio Guide</title><style>
+:root{--ink:#edf8fa;--muted:#b8ced3;--panel:rgba(8,32,39,.94);--accent:#60d5e6}*{box-sizing:border-box}html,body{min-height:100%;margin:0}
+body{color:var(--ink);background:radial-gradient(circle at 12% 12%,rgba(47,180,201,.22),transparent 32rem),linear-gradient(145deg,#06171c,#0a262e 54%,#07191e);font-family:"Microsoft JhengHei","PingFang TC",system-ui,sans-serif}
+.shell{min-height:100vh;padding:clamp(12px,3vw,40px);display:grid;place-items:center}.card{width:min(1180px,100%);display:grid;grid-template-columns:minmax(280px,.86fr) minmax(320px,1.14fr);gap:clamp(22px,4vw,56px);align-items:center;padding:clamp(18px,3vw,38px);border:1px solid rgba(166,230,238,.22);border-radius:26px;background:var(--panel);box-shadow:0 24px 70px rgba(0,0,0,.38)}
+.poster{overflow:hidden;border-radius:16px;background:#fff}.poster img{width:100%;display:block}.eyebrow{color:var(--accent);font-weight:700;letter-spacing:.14em}h1{font-size:clamp(1.7rem,4.1vw,3.35rem);line-height:1.15}
+.language-row{margin:18px 0 6px;display:flex;gap:12px;align-items:center;flex-wrap:wrap}select{min-width:190px;padding:10px;border-radius:10px;color:var(--ink);background:#12343c}
+.intro,.hint,.times{color:var(--muted)}.subtitle{min-height:7.5rem;display:grid;place-items:center;padding:20px 24px;border-left:5px solid #2fb4c9;border-radius:10px;background:rgba(255,255,255,.075);font-size:clamp(1.2rem,2.4vw,1.72rem);line-height:1.6;text-align:center}
+.controls{margin-top:20px;display:grid;grid-template-columns:auto 1fr;gap:14px 18px;align-items:center}.play{width:62px;height:62px;border:0;border-radius:50%;background:var(--accent);font-size:1.4rem}.progress input{width:100%}.times{display:flex;justify-content:space-between}.hint{grid-column:1/-1}
+@media(max-width:760px){.card{grid-template-columns:1fr}.copy{text-align:center}.language-row{justify-content:center}}
+</style></head><body><main class="shell"><section class="card"><figure class="poster"><img src="poster-27.jpg" alt="第27張成果海報"></figure><div class="copy">
+<p id="eyebrow" class="eyebrow"></p><h1 id="title"></h1><div class="language-row"><label id="languageLabel"></label><select id="language"><option value="zh-TW">繁體中文</option><option value="en-US">English</option><option value="ja-JP">日本語</option><option value="ko-KR">한국어</option><option value="es-ES">Español</option><option value="fr-FR">Français</option><option value="de-DE">Deutsch</option><option value="it-IT">Italiano</option><option value="pt-PT">Português</option><option value="ru-RU">Русский</option></select></div>
+<p id="intro" class="intro"></p><div id="subtitle" class="subtitle"></div><div class="controls"><button id="play" class="play" type="button" aria-label="播放語音導覽">▶</button><div class="progress"><input id="seek" type="range" min="0" max="8" value="0"><div class="times"><span id="now">0:00</span><span id="total">約 1:55</span></div></div><p id="hint" class="hint"></p></div></div></section></main>
+<script>
+window.GUIDE_LANGUAGES={"zh-TW": {"label": "繁體中文", "title": "智慧校園網路、Adobe授權與雲端服務成果", "eyebrow": "高等教育深耕計畫成果展 · 27", "intro": "點選播放按鈕，即可一邊觀看展板，一邊收聽導覽並閱讀同步字幕。", "start": "點選下方按鈕開始語音導覽。", "hint": "請先點選圓形播放按鈕開始語音。此版本使用瀏覽器內建語音。", "play": "播放導覽", "pause": "暫停導覽", "progress": "導覽播放進度", "language": "導覽語言", "cues": ["歡迎來到高等教育深耕計畫成果展。本頁介紹電子計算機中心推動智慧校園建設的三項成果。", "第一項是校園網路交換器暨電腦教室設備汰換計畫。學校更新老舊交換器、優化網路佈線、導入集中監控，並將電腦教室硬碟升級為 SSD，以提升網路穩定度與電腦執行效能。", "本計畫完成十四間電腦教室網路頻寬升級，SSD 設備支援三十一門課程、八個系所，服務一千三百二十九位學生及三十一位教師與行政人員。", "第二項是 Adobe 設計軟體校園授權。學校導入 Adobe Creative Cloud 等工具，支援基礎設計、影像動畫及數位整合課程，強化學生數位創作與實務能力。", "一一四年度共有三千九百一十七位學生使用相關資源，涵蓋一百零九門課程與十四個系所；另有二百八十九位教師及行政人員使用。", "第三項是雲端暨智慧校園整合服務。學校持續採購 AWS 雲端服務資源，並辦理雲端應用教育訓練，協助師生學習人工智慧運算與雲端服務。", "一一四年度完成十萬點 AWS 雲端服務點數採購，並辦理兩場教育訓練，共四十八人次參與。", "三項計畫共同建構穩定、高效且具延展性的數位教學環境，為未來人工智慧、雲端運算與創新教學奠定基礎。感謝您的聆聽。"]}, "en-US": {"label": "English", "title": "Smart Campus Networks, Adobe Licensing, and Cloud Services", "eyebrow": "Higher Education Sprout Project Exhibition · 27", "intro": "Select play to view the poster, listen to the guide, and read synchronized subtitles.", "start": "Select the button below to begin the audio guide.", "hint": "Select the round play button to start. This version uses your browser’s built-in voice.", "play": "Play audio guide", "pause": "Pause audio guide", "progress": "Audio guide progress", "language": "Guide language", "cues": ["Welcome to the Higher Education Sprout Project Achievement Exhibition. This page presents three smart-campus initiatives led by the Computer Center.", "The first initiative upgraded campus network switches and computer classrooms. Old switches were replaced, network cabling was optimized, centralized monitoring was introduced, and classroom computers were upgraded with solid-state drives.", "Fourteen computer classrooms received bandwidth upgrades. SSD-equipped classrooms supported thirty-one courses across eight departments, serving one thousand three hundred and twenty-nine students and thirty-one faculty and administrative users.", "The second initiative provided campus-wide Adobe Creative Cloud licensing. These tools supported design, digital imaging, animation, and integrated media courses, strengthening students’ creative and practical digital skills.", "In year one hundred and fourteen, Adobe resources supported three thousand nine hundred and seventeen student participations in one hundred and nine courses across fourteen departments, as well as two hundred and eighty-nine faculty and administrative users.", "The third initiative developed cloud and smart-campus services. The university purchased Amazon Web Services credits and organized cloud application training to support artificial intelligence and cloud computing education.", "In year one hundred and fourteen, one hundred thousand AWS service credits were purchased, and two training sessions were completed with forty-eight participants.", "Together, these projects created a stable, efficient, and expandable digital learning environment for artificial intelligence, cloud computing, and innovative teaching. Thank you for listening."]}, "ja-JP": {"label": "日本語", "title": "スマートキャンパスネットワーク、Adobeライセンス、クラウドサービス", "eyebrow": "Higher Education Sprout Project Exhibition · 27", "intro": "再生ボタンを押すと、展示パネルを見ながら音声ガイドと同期字幕をご利用いただけます。", "start": "下のボタンを押して音声ガイドを開始してください。", "hint": "丸い再生ボタンを押してください。この版はブラウザー内蔵音声を使用します。", "play": "音声ガイドを再生", "pause": "一時停止", "progress": "音声ガイドの進行状況", "language": "ガイド言語", "cues": ["高等教育深耕計画成果展へようこそ。このページでは、電子計算機センターが進めた三つのスマートキャンパス施策を紹介します。", "第一は、校内ネットワーク交換機とコンピューター教室設備の更新です。老朽化した交換機を交換し、配線を改善し、集中監視を導入し、教室のパソコンを SSD に更新しました。", "十四のコンピューター教室でネットワーク帯域を強化し、SSD 設備は三十一科目、八学科で利用され、学生千三百二十九人と教職員三十一人を支援しました。", "第二は Adobe Creative Cloud の学内ライセンスです。デザイン、画像、アニメーション、デジタル統合の授業を支援し、学生の制作力と実務力を高めました。", "一一四年度には、三千九百十七人の学生が百九科目、十四学科で利用し、教職員二百八十九人も教育、研究、行政に活用しました。", "第三は、クラウドとスマートキャンパス統合サービスです。AWS のクラウド資源を導入し、人工知能とクラウド活用の研修を行いました。", "一一四年度には AWS 十万ポイントを購入し、二回の研修に四十八人が参加しました。", "三つの計画は、安定性、効率性、拡張性を備えたデジタル教育環境を整備し、今後の AI、クラウド、革新的教育の基盤となります。ご清聴ありがとうございました。"]}, "ko-KR": {"label": "한국어", "title": "스마트 캠퍼스 네트워크, Adobe 라이선스 및 클라우드 서비스", "eyebrow": "Higher Education Sprout Project Exhibition · 27", "intro": "재생 버튼을 누르면 전시 패널을 보며 음성 안내와 동기화 자막을 이용할 수 있습니다.", "start": "아래 버튼을 눌러 음성 안내를 시작하세요.", "hint": "원형 재생 버튼을 눌러 시작하세요. 이 버전은 브라우저 내장 음성을 사용합니다.", "play": "음성 안내 재생", "pause": "일시 정지", "progress": "음성 안내 진행률", "language": "안내 언어", "cues": ["고등교육 심화계획 성과전에 오신 것을 환영합니다. 이 페이지는 전자계산기센터가 추진한 세 가지 스마트 캠퍼스 사업을 소개합니다.", "첫 번째는 캠퍼스 네트워크 스위치와 컴퓨터 교실 장비 교체입니다. 노후 스위치를 교체하고 배선을 개선했으며, 중앙 모니터링을 도입하고 교실 컴퓨터를 SSD로 업그레이드했습니다.", "열네 개 컴퓨터 교실의 네트워크 대역폭을 높였고, SSD 장비는 서른한 개 과목과 여덟 개 학과에서 활용되어 학생 천삼백이십구 명과 교직원 서른한 명을 지원했습니다.", "두 번째는 Adobe Creative Cloud 캠퍼스 라이선스입니다. 디자인, 영상, 애니메이션, 디지털 통합 수업을 지원하여 학생의 창작 및 실무 역량을 강화했습니다.", "114년도에는 열네 개 학과, 백아홉 개 과목에서 학생 삼천구백십칠 명이 활용했고, 교직원 이백팔십구 명도 교육, 연구, 행정 업무에 사용했습니다.", "세 번째는 클라우드 및 스마트 캠퍼스 통합 서비스입니다. AWS 클라우드 자원을 도입하고 인공지능 및 클라우드 활용 교육을 운영했습니다.", "114년도에는 AWS 서비스 포인트 십만 점을 구매하고 두 차례 교육을 실시해 마흔여덟 명이 참여했습니다.", "세 사업은 안정적이고 효율적이며 확장 가능한 디지털 교육환경을 구축하여 미래의 인공지능, 클라우드, 혁신교육을 지원합니다. 감사합니다."]}, "es-ES": {"label": "Español", "title": "Redes inteligentes, licencias Adobe y servicios en la nube", "eyebrow": "Higher Education Sprout Project Exhibition · 27", "intro": "Pulse reproducir para ver el panel, escuchar la guía y leer los subtítulos sincronizados.", "start": "Pulse el botón inferior para iniciar la audioguía.", "hint": "Pulse el botón redondo de reproducción. Esta versión utiliza la voz integrada del navegador.", "play": "Reproducir audioguía", "pause": "Pausar audioguía", "progress": "Progreso de la audioguía", "language": "Idioma de la guía", "cues": ["Bienvenidos a la Exposición de Logros del Proyecto Sprout de Educación Superior. Esta página presenta tres iniciativas de campus inteligente impulsadas por el Centro de Computación.", "La primera iniciativa renovó los conmutadores de red y los equipos de las aulas informáticas. Se sustituyeron los dispositivos antiguos, se optimizó el cableado, se incorporó supervisión centralizada y se actualizaron los ordenadores con unidades SSD.", "Catorce aulas informáticas recibieron mejoras de ancho de banda. Los equipos con SSD apoyaron treinta y un cursos de ocho departamentos y atendieron a mil trescientos veintinueve estudiantes y treinta y un usuarios docentes y administrativos.", "La segunda iniciativa proporcionó licencias institucionales de Adobe Creative Cloud para diseño, imagen digital, animación y producción multimedia.", "En el año ciento catorce, estos recursos apoyaron a tres mil novecientos diecisiete estudiantes en ciento nueve cursos de catorce departamentos, además de doscientos ochenta y nueve docentes y empleados administrativos.", "La tercera iniciativa desarrolló servicios en la nube y de campus inteligente mediante Amazon Web Services y cursos de formación práctica.", "Se adquirieron cien mil créditos de AWS y se realizaron dos cursos con cuarenta y ocho participantes.", "En conjunto, estos proyectos crean un entorno digital estable, eficiente y ampliable para la inteligencia artificial, la computación en la nube y la innovación educativa. Gracias por su atención."]}, "fr-FR": {"label": "Français", "title": "Réseaux intelligents, licences Adobe et services cloud", "eyebrow": "Higher Education Sprout Project Exhibition · 27", "intro": "Appuyez sur lecture pour voir le panneau, écouter le guide et lire les sous-titres synchronisés.", "start": "Appuyez sur le bouton ci-dessous pour commencer l’audioguide.", "hint": "Appuyez sur le bouton rond de lecture. Cette version utilise la voix intégrée du navigateur.", "play": "Lire l’audioguide", "pause": "Mettre en pause", "progress": "Progression de l’audioguide", "language": "Langue du guide", "cues": ["Bienvenue à l’exposition des réalisations du Projet Sprout pour l’enseignement supérieur. Cette page présente trois initiatives de campus intelligent menées par le Centre informatique.", "La première initiative a renouvelé les commutateurs réseau et les équipements des salles informatiques. Les anciens appareils ont été remplacés, le câblage optimisé, une supervision centralisée mise en place et les ordinateurs équipés de disques SSD.", "Quatorze salles informatiques ont bénéficié d’une meilleure bande passante. Les équipements SSD ont soutenu trente et un cours dans huit départements, pour mille trois cent vingt-neuf étudiants et trente et un membres du personnel.", "La deuxième initiative concerne les licences institutionnelles Adobe Creative Cloud pour la création graphique, l’image numérique, l’animation et les médias intégrés.", "En année cent quatorze, ces ressources ont servi trois mille neuf cent dix-sept étudiants dans cent neuf cours de quatorze départements, ainsi que deux cent quatre-vingt-neuf enseignants et personnels administratifs.", "La troisième initiative a développé les services cloud et le campus intelligent grâce à Amazon Web Services et à des formations pratiques.", "Cent mille crédits AWS ont été achetés et deux formations ont réuni quarante-huit participants.", "Ces projets construisent un environnement numérique stable, efficace et évolutif pour l’intelligence artificielle, le cloud et l’innovation pédagogique. Merci de votre écoute."]}, "de-DE": {"label": "Deutsch", "title": "Intelligente Campusnetze, Adobe-Lizenzen und Cloud-Dienste", "eyebrow": "Higher Education Sprout Project Exhibition · 27", "intro": "Starten Sie die Wiedergabe, um die Tafel zu betrachten, den Audioguide zu hören und synchrone Untertitel zu lesen.", "start": "Klicken Sie unten, um den Audioguide zu starten.", "hint": "Klicken Sie auf die runde Wiedergabetaste. Diese Version nutzt die integrierte Browserstimme.", "play": "Audioguide abspielen", "pause": "Audioguide pausieren", "progress": "Fortschritt des Audioguides", "language": "Sprache des Audioguides", "cues": ["Willkommen zur Ergebnisausstellung des Higher Education Sprout Project. Diese Seite zeigt drei Smart-Campus-Initiativen des Rechenzentrums.", "Die erste Initiative erneuerte Netzwerkswitches und die Ausstattung der Computerräume. Alte Geräte wurden ersetzt, die Verkabelung optimiert, eine zentrale Überwachung eingeführt und die Computer mit SSD-Laufwerken ausgestattet.", "Vierzehn Computerräume erhielten mehr Bandbreite. Die SSD-Ausstattung unterstützte einunddreißig Kurse in acht Fachbereichen und diente eintausenddreihundertneunundzwanzig Studierenden sowie einunddreißig Beschäftigten.", "Die zweite Initiative stellte campusweite Adobe-Creative-Cloud-Lizenzen für Gestaltung, digitale Bildbearbeitung, Animation und integrierte Medien bereit.", "Im Jahr einhundertvierzehn nutzten dreitausendneunhundertsiebzehn Studierende diese Ressourcen in einhundertneun Kursen und vierzehn Fachbereichen. Außerdem arbeiteten zweihundertneunundachtzig Lehr- und Verwaltungsmitarbeitende damit.", "Die dritte Initiative entwickelte Cloud- und Smart-Campus-Dienste mit Amazon Web Services und praxisnahen Schulungen.", "Es wurden einhunderttausend AWS-Punkte beschafft und zwei Schulungen mit achtundvierzig Teilnehmenden durchgeführt.", "Gemeinsam schaffen die Projekte eine stabile, effiziente und erweiterbare digitale Lernumgebung für künstliche Intelligenz, Cloud-Dienste und innovative Lehre. Vielen Dank fürs Zuhören."]}, "it-IT": {"label": "Italiano", "title": "Reti intelligenti, licenze Adobe e servizi cloud", "eyebrow": "Higher Education Sprout Project Exhibition · 27", "intro": "Premere play per osservare il pannello, ascoltare la guida e leggere i sottotitoli sincronizzati.", "start": "Premere il pulsante qui sotto per iniziare l’audioguida.", "hint": "Premere il pulsante rotondo di riproduzione. Questa versione usa la voce integrata del browser.", "play": "Riproduci audioguida", "pause": "Pausa audioguida", "progress": "Avanzamento audioguida", "language": "Lingua della guida", "cues": ["Benvenuti alla mostra dei risultati del Progetto Sprout per l’istruzione superiore. Questa pagina presenta tre iniziative di campus intelligente realizzate dal Centro di calcolo.", "La prima iniziativa ha rinnovato gli switch di rete e le attrezzature delle aule informatiche. Sono stati sostituiti i dispositivi obsoleti, migliorato il cablaggio, introdotto il monitoraggio centralizzato e aggiornati i computer con unità SSD.", "Quattordici aule informatiche hanno ricevuto maggiore larghezza di banda. Le attrezzature SSD hanno supportato trentuno corsi in otto dipartimenti, servendo mille trecentoventinove studenti e trentuno utenti del personale.", "La seconda iniziativa ha fornito licenze istituzionali di Adobe Creative Cloud per design, immagine digitale, animazione e produzione multimediale.", "Nell’anno centoquattordici, queste risorse hanno sostenuto tremilanovecentodiciassette studenti in centonove corsi di quattordici dipartimenti, oltre a duecentottantanove docenti e amministrativi.", "La terza iniziativa ha sviluppato servizi cloud e di campus intelligente con Amazon Web Services e corsi pratici.", "Sono stati acquistati centomila crediti AWS e organizzati due corsi con quarantotto partecipanti.", "I tre progetti creano un ambiente digitale stabile, efficiente ed espandibile per l’intelligenza artificiale, il cloud e l’innovazione didattica. Grazie per l’ascolto."]}, "pt-PT": {"label": "Português", "title": "Redes inteligentes, licenças Adobe e serviços cloud", "eyebrow": "Higher Education Sprout Project Exhibition · 27", "intro": "Selecione reproduzir para ver o painel, ouvir o guia e ler legendas sincronizadas.", "start": "Selecione o botão abaixo para iniciar o audioguia.", "hint": "Selecione o botão redondo de reprodução. Esta versão utiliza a voz integrada do navegador.", "play": "Reproduzir audioguia", "pause": "Pausar audioguia", "progress": "Progresso do audioguia", "language": "Idioma do guia", "cues": ["Bem-vindos à Exposição de Resultados do Projeto Sprout do Ensino Superior. Esta página apresenta três iniciativas de campus inteligente promovidas pelo Centro de Computação.", "A primeira iniciativa renovou os comutadores de rede e os equipamentos das salas de informática. Foram substituídos dispositivos antigos, melhorado o cabeamento, introduzida monitorização centralizada e atualizados os computadores com discos SSD.", "Catorze salas de informática receberam maior largura de banda. Os equipamentos SSD apoiaram trinta e uma disciplinas em oito departamentos, servindo mil trezentos e vinte e nove estudantes e trinta e um utilizadores do pessoal.", "A segunda iniciativa disponibilizou licenças institucionais Adobe Creative Cloud para design, imagem digital, animação e produção multimédia.", "No ano cento e catorze, estes recursos apoiaram três mil novecentos e dezassete estudantes em cento e nove disciplinas de catorze departamentos, além de duzentos e oitenta e nove docentes e funcionários.", "A terceira iniciativa desenvolveu serviços cloud e de campus inteligente com Amazon Web Services e formação prática.", "Foram adquiridos cem mil créditos AWS e realizados dois cursos com quarenta e oito participantes.", "Os projetos criam um ambiente digital estável, eficiente e expansível para inteligência artificial, cloud e inovação pedagógica. Obrigado pela atenção."]}, "ru-RU": {"label": "Русский", "title": "Умные сети кампуса, лицензии Adobe и облачные сервисы", "eyebrow": "Higher Education Sprout Project Exhibition · 27", "intro": "Нажмите кнопку воспроизведения, чтобы смотреть стенд, слушать аудиогид и читать синхронные субтитры.", "start": "Нажмите кнопку ниже, чтобы начать аудиогид.", "hint": "Нажмите круглую кнопку воспроизведения. Эта версия использует встроенный голос браузера.", "play": "Воспроизвести аудиогид", "pause": "Пауза", "progress": "Ход аудиогида", "language": "Язык гида", "cues": ["Добро пожаловать на выставку достижений проекта развития высшего образования. Эта страница представляет три проекта умного кампуса, реализованные вычислительным центром.", "Первый проект обновил сетевые коммутаторы и оборудование компьютерных аудиторий. Были заменены устаревшие устройства, улучшена кабельная инфраструктура, внедрён централизованный мониторинг, а компьютеры оснащены накопителями SSD.", "В четырнадцати компьютерных аудиториях была увеличена пропускная способность. Оборудование SSD поддержало тридцать один курс в восьми подразделениях и обслужило тысячу триста двадцать девять студентов и тридцать одного сотрудника.", "Второй проект предоставил институциональные лицензии Adobe Creative Cloud для дизайна, цифровой обработки изображений, анимации и мультимедийного производства.", "В сто четырнадцатом году ресурсами воспользовались три тысячи девятьсот семнадцать студентов в ста девяти курсах четырнадцати подразделений, а также двести восемьдесят девять преподавателей и сотрудников.", "Третий проект развивал облачные сервисы и умный кампус с помощью Amazon Web Services и практических тренингов.", "Было приобретено сто тысяч кредитов AWS и проведено два курса для сорока восьми участников.", "Вместе проекты создают стабильную, эффективную и расширяемую цифровую среду для искусственного интеллекта, облачных технологий и инновационного обучения. Спасибо за внимание."]}};
+</script><script>
+const languages=window.GUIDE_LANGUAGES,
+      synth=window.speechSynthesis,
+      play=document.getElementById('play'),
+      seek=document.getElementById('seek'),
+      sub=document.getElementById('subtitle'),
+      now=document.getElementById('now'),
+      total=document.getElementById('total'),
+      selector=document.getElementById('language');
+
+let config=languages['zh-TW'], index=0, playing=false, paused=false, generation=0;
+
+const estimate=cues=>Math.max(45,Math.round(cues.join('').length/(document.documentElement.lang.startsWith('zh')?4.4:13)));
+const fmt=v=>`${Math.floor(v/60)}:${String(Math.floor(v%60)).padStart(2,'0')}`;
+
+function voiceFor(lang){
+  const voices=synth.getVoices();
+  return voices.find(v=>v.lang===lang)
+      || voices.find(v=>v.lang.startsWith(lang.split('-')[0]))
+      || null;
+}
+
+// Keep the visible subtitle natural while making common abbreviations clear
+// in speech.  In particular, AI is spoken as two letters instead of one word.
+function speechText(text,lang){
+  if(lang==='zh-TW') return text
+    .replace(/AI/g,'A I')
+    .replace(/AWS/g,'A W S')
+    .replace(/SSD/g,'S S D');
+  return text;
+}
+
+function render(){
+  const n=config.cues.length;
+  seek.max=n;
+  seek.value=index;
+  now.textContent=fmt(estimate(config.cues)*index/n);
+  total.textContent='約 '+fmt(estimate(config.cues));
+}
+
+function stop(){
+  generation++;
+  synth.cancel();
+  playing=false;
+  paused=false;
+  play.textContent='▶';
+  play.setAttribute('aria-label',config.play);
+}
+
+function speakFrom(i){
+  stop();
+  index=Math.min(Math.max(0,i),config.cues.length-1);
+  playing=true;
+  play.textContent='Ⅱ';
+  play.setAttribute('aria-label',config.pause);
+  const myGen=++generation;
+
+  const next=()=>{
+    if(myGen!==generation || !playing) return;
+
+    if(index>=config.cues.length){
+      playing=false;
+      play.textContent='▶';
+      sub.textContent=config.cues.at(-1);
+      seek.value=config.cues.length;
+      now.textContent=total.textContent.replace('約 ','');
+      return;
+    }
+
+    sub.textContent=config.cues[index];
+    render();
+
+    const u=new SpeechSynthesisUtterance(speechText(config.cues[index],selector.value));
+    u.lang=selector.value;
+    const v=voiceFor(selector.value);
+    if(v) u.voice=v;
+    // A slightly slower pace keeps Chinese letter-by-letter pronunciation
+    // intelligible and keeps the complete guide within the planned duration.
+    u.rate=selector.value==='zh-TW' ? 0.94 : 0.97;
+    u.pitch=1;
+
+    u.onend=()=>{
+      if(myGen!==generation) return;
+      index++;
+      next();
+    };
+
+    u.onerror=()=>{
+      playing=false;
+      play.textContent='▶';
+      sub.textContent=config.start;
+    };
+
+    synth.speak(u);
+  };
+
+  next();
+}
+
+function applyLanguage(code){
+  stop();
+  config=languages[code];
+  document.documentElement.lang=code;
+  document.title=config.title+'｜Audio Guide';
+  document.getElementById('eyebrow').textContent=config.eyebrow;
+  document.getElementById('title').textContent=config.title;
+  document.getElementById('languageLabel').textContent=config.language;
+  document.getElementById('intro').textContent=config.intro;
+  document.getElementById('hint').textContent=config.hint;
+  sub.textContent=config.start;
+  play.setAttribute('aria-label',config.play);
+  seek.setAttribute('aria-label',config.progress);
+  index=0;
+  render();
+}
+
+selector.onchange=()=>applyLanguage(selector.value);
+
+play.onclick=()=>{
+  if(playing){
+    if(synth.paused){
+      synth.resume();
+      paused=false;
+      play.textContent='Ⅱ';
+    }else{
+      synth.pause();
+      paused=true;
+      play.textContent='▶';
+    }
+  }else{
+    speakFrom(index>=config.cues.length?0:index);
+  }
+};
+
+seek.oninput=()=>{
+  index=Number(seek.value);
+  stop();
+  sub.textContent=index<config.cues.length?config.cues[index]:config.cues.at(-1);
+  render();
+};
+
+synth.onvoiceschanged=()=>{};
+applyLanguage('zh-TW');
+</script></body></html>

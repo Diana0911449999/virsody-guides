@@ -36,7 +36,7 @@ def main():
     OUT.mkdir(exist_ok=True)
     languages = load_languages()
     for code, item in languages.items():
-        spoken = " ".join(item["cues"])
+        spoken = " ".join(cue[2] if isinstance(cue, list) else cue for cue in item["cues"])
         text_path = ROOT / f"narration-41-{code}.txt"
         audio_path = OUT / f"narration-41-{code}.mp3"
         srt_path = ROOT / f"narration-41-{code}.srt"

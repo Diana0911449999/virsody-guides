@@ -1,0 +1,32 @@
+name: Build multilingual guide 41
+on:
+  push:
+    branches: [main]
+    paths:
+      - generate_multilang_41.py
+      - 41-formal.html
+      - poster-41-source.jpg
+      - .github/workflows/build-guide-41.yml
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install speech generator
+        run: python -m pip install edge-tts
+      - name: Generate audio, subtitles, and page
+        run: python generate_multilang_41.py
+      - name: Remove temporary narration sources
+        run: rm -f narration-41-*.txt narration-41-*.srt poster-41-source.jpg 41-formal.html generate_multilang_41.py
+      - name: Commit generated guide
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 41.html languages-41.js narration-41-*.mp3 poster-41.jpg
+          git commit -m "Add multilingual guide 41"
+          git push

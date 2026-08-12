@@ -1,0 +1,30 @@
+name: Build literal E M I letter clips for guide 06
+on:
+  push:
+    branches: [main]
+    paths:
+      - generate_update_06_v7.py
+      - .github/workflows/build-update-guide-06-v7.yml
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install speech generator
+        run: python -m pip install edge-tts
+      - name: Build Chinese narration with separate letter clips
+        run: python generate_update_06_v7.py
+      - name: Remove temporary sources
+        run: rm -f cue-*.txt cue-*.mp3 cue-*.wav narration-06-zh-TW-final.wav
+      - name: Commit corrected guide
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 06.html languages-06.js narration-06-zh-TW.mp3
+          git commit -m "Build separate E M I letter clips for guide 06"
+          git push

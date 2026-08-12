@@ -53,7 +53,16 @@ def trim_edge_silence(pcm, threshold=180, keep_ms=8):
     return samples[start:end].tobytes()
 
 
-def build_cue_pcm(text, cue_index):
+def build_canonical_emi_pcm():
+    """Build E M I once so every occurrence uses the exact same waveform."""
+    pcm = bytearray()
+    for letter in ("E", "M", "I"):
+        letter_pcm = synthesize_pcm(letter, f"canonical-{letter}", LETTER_RATE)
+        pcm.extend(trim_edge_silence(letter_pcm))
+    return bytes(pcm)
+
+
+def build_cue_pcm(text, cue_index, canonical_emi_pcm):
     parts = re.split(r"(EMI)", text)
     pcm = bytearray()
     for part_index, part in enumerate(parts):
@@ -61,19 +70,20 @@ def build_cue_pcm(text, cue_index):
             continue
         if part != "EMI":
             spoken = part.replace("累積158人次參與", "累積一百五十八人次參與")
-            pcm.extend(synthesize_pcm(spoken, f"cue-{cue_index:02d}-{part_index:02d}"))
+            spoken_pcm = synthesize_pcm(spoken, f"cue-{cue_index:02d}-{part_index:02d}")
+            # Remove the padding at either side of an EMI boundary. This
+            # prevents a pause before E or after I while leaving ordinary
+            # sentence timing untouched.
+            touches_emi = (
+                (part_index > 0 and parts[part_index - 1] == "EMI")
+                or (part_index + 1 < len(parts) and parts[part_index + 1] == "EMI")
+            )
+            pcm.extend(trim_edge_silence(spoken_pcm) if touches_emi else spoken_pcm)
             continue
 
-        # Generate literal English letters as three independent clips, then
-        # remove the leading/trailing padding added by TTS. No artificial gap
-        # is inserted, so E, M and I remain distinct but flow continuously.
-        for letter_index, letter in enumerate(("E", "M", "I")):
-            letter_pcm = synthesize_pcm(
-                letter, f"cue-{cue_index:02d}-{part_index:02d}-{letter}", LETTER_RATE
-            )
-            pcm.extend(trim_edge_silence(letter_pcm))
-            if letter_index < 2 and LETTER_GAP_MS:
-                pcm.extend(b"\x00\x00" * int(SAMPLE_RATE * LETTER_GAP_MS / 1000))
+        # Reuse one canonical E M I waveform everywhere, guaranteeing that
+        # later pronunciations sound exactly the same as the first one.
+        pcm.extend(canonical_emi_pcm)
     return bytes(pcm)
 
 
@@ -89,10 +99,11 @@ def main():
 
     all_pcm = bytearray()
     new_cues = []
+    canonical_emi_pcm = build_canonical_emi_pcm()
     current_seconds = 0.1
     all_pcm.extend(b"\x00\x00" * int(SAMPLE_RATE * current_seconds))
     for index, cue in enumerate(chinese["cues"]):
-        cue_pcm = build_cue_pcm(cue[2], index)
+        cue_pcm = build_cue_pcm(cue[2], index, canonical_emi_pcm)
         duration = len(cue_pcm) / 2 / SAMPLE_RATE
         start = round(current_seconds, 3)
         end = round(current_seconds + duration, 3)
@@ -110,7 +121,7 @@ def main():
     audio_output = ROOT / "narration-06-zh-TW.mp3"
     run("ffmpeg", "-y", "-loglevel", "error", "-i", str(wav_output),
         "-codec:a", "libmp3lame", "-b:a", "96k", str(audio_output))
-    chinese["audio"] = audio_output.name + "?v=8"
+    chinese["audio"] = audio_output.name + "?v=9"
     chinese["cues"] = new_cues
 
     languages_path.write_text(
@@ -119,13 +130,13 @@ def main():
     )
     html_path = ROOT / "06.html"
     html = html_path.read_text(encoding="utf-8")
-    html = re.sub(r'languages-06\.js(?:\?v=\d+)?', "languages-06.js?v=8", html, count=1)
-    html = re.sub(r'narration-06-zh-TW\.mp3(?:\?v=\d+)?', "narration-06-zh-TW.mp3?v=8", html, count=1)
+    html = re.sub(r'languages-06\.js(?:\?v=\d+)?', "languages-06.js?v=9", html, count=1)
+    html = re.sub(r'narration-06-zh-TW\.mp3(?:\?v=\d+)?', "narration-06-zh-TW.mp3?v=9", html, count=1)
     duration = new_cues[-1][1]
     html = re.sub(r'max="[0-9.]+"', f'max="{duration}"', html, count=1)
     html = re.sub(r'id="total">\d+:\d+', f'id="total">{int(duration // 60)}:{int(duration % 60):02d}', html, count=1)
     html_path.write_text(html, encoding="utf-8")
-    print(f"Built tightly joined literal E M I clips after silence trimming; duration {duration:.1f}s")
+    print(f"Built one canonical E M I waveform and removed boundary pauses; duration {duration:.1f}s")
 
 
 if __name__ == "__main__":

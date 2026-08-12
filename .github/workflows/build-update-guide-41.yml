@@ -1,0 +1,30 @@
+name: Correct multilingual guide 41 Indigenous education wording
+on:
+  push:
+    branches: [main]
+    paths:
+      - generate_update_41.py
+      - .github/workflows/build-update-guide-41.yml
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install speech generator
+        run: python -m pip install edge-tts
+      - name: Regenerate corrected audio and subtitles
+        run: python generate_update_41.py
+      - name: Remove temporary sources
+        run: rm -f narration-41-*.txt narration-41-*.srt
+      - name: Commit corrected guide
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 41.html languages-41.js narration-41-*.mp3
+          git commit -m "Correct guide 41 Indigenous education wording"
+          git push

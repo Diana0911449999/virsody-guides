@@ -3,14 +3,12 @@ import re
 import subprocess
 import sys
 import wave
-from array import array
 from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent
 VOICE = "zh-TW-HsiaoChenNeural"
 RATE = "+10%"
-TOKEN_RATE = "+15%"
 SAMPLE_RATE = 24000
 
 
@@ -47,50 +45,19 @@ def synthesize_pcm(text, stem, rate=RATE):
     return mp3_to_pcm(mp3_path, wav_path)
 
 
-def trim_edge_silence(pcm, threshold=180, keep_ms=8):
-    samples = array("h")
-    samples.frombytes(pcm)
-    audible = [i for i, sample in enumerate(samples) if abs(sample) >= threshold]
-    if not audible:
-        return pcm
-    keep = int(SAMPLE_RATE * keep_ms / 1000)
-    start = max(0, audible[0] - keep)
-    end = min(len(samples), audible[-1] + keep + 1)
-    return samples[start:end].tobytes()
-
-
 def spoken_text(display_text):
     result = display_text
     for display, spoken in DISPLAY_TO_SPOKEN.items():
         result = result.replace(display, spoken)
+    # Keep i separate and PAS joined, but let the same Mandarin narrator say
+    # the entire sentence in one take so the voice and prosody never change.
+    result = result.replace("iPAS", "愛帕斯")
     return result
 
 
-def build_ipas_pcm():
-    # Force the requested pronunciation: i is one sound; PAS is one joined
-    # sound. English spellings remove TTS ambiguity while preserving one voice.
-    i_pcm = trim_edge_silence(synthesize_pcm("eye", "token-i", TOKEN_RATE))
-    pas_pcm = trim_edge_silence(synthesize_pcm("pass", "token-PAS", TOKEN_RATE))
-    return i_pcm + pas_pcm
-
-
-def build_cue_pcm(text, cue_index, ipas_pcm):
+def build_cue_pcm(text, cue_index):
     source = spoken_text(text)
-    parts = re.split(r"(iPAS)", source)
-    pcm = bytearray()
-    for part_index, part in enumerate(parts):
-        if not part:
-            continue
-        if part == "iPAS":
-            pcm.extend(ipas_pcm)
-            continue
-        part_pcm = synthesize_pcm(part, f"cue-{cue_index:02d}-{part_index:02d}")
-        touches_ipas = (
-            (part_index > 0 and parts[part_index - 1] == "iPAS")
-            or (part_index + 1 < len(parts) and parts[part_index + 1] == "iPAS")
-        )
-        pcm.extend(trim_edge_silence(part_pcm) if touches_ipas else part_pcm)
-    return bytes(pcm)
+    return synthesize_pcm(source, f"cue-{cue_index:02d}")
 
 
 def main():
@@ -115,12 +82,11 @@ def main():
     if not any("iPAS" in cue[2] for cue in chinese["cues"]):
         raise RuntimeError("Expected iPAS token was not found")
 
-    ipas_pcm = build_ipas_pcm()
     all_pcm = bytearray(b"\x00\x00" * int(SAMPLE_RATE * 0.1))
     new_cues = []
     current_seconds = 0.1
     for index, cue in enumerate(chinese["cues"]):
-        cue_pcm = build_cue_pcm(cue[2], index, ipas_pcm)
+        cue_pcm = build_cue_pcm(cue[2], index)
         duration = len(cue_pcm) / 2 / SAMPLE_RATE
         start = round(current_seconds, 3)
         end = round(current_seconds + duration, 3)
@@ -138,7 +104,7 @@ def main():
     audio_output = ROOT / "narration-16-zh-TW.mp3"
     run("ffmpeg", "-y", "-loglevel", "error", "-i", str(wav_output),
         "-codec:a", "libmp3lame", "-b:a", "96k", str(audio_output))
-    chinese["audio"] = audio_output.name + "?v=2"
+    chinese["audio"] = audio_output.name + "?v=3"
     chinese["cues"] = new_cues
 
     languages_path.write_text(
@@ -147,13 +113,13 @@ def main():
     )
     html_path = ROOT / "16.html"
     html = html_path.read_text(encoding="utf-8")
-    html = re.sub(r'languages-16\.js(?:\?v=\d+)?', "languages-16.js?v=2", html, count=1)
-    html = re.sub(r'narration-16-zh-TW\.mp3(?:\?v=\d+)?', "narration-16-zh-TW.mp3?v=2", html, count=1)
+    html = re.sub(r'languages-16\.js(?:\?v=\d+)?', "languages-16.js?v=3", html, count=1)
+    html = re.sub(r'narration-16-zh-TW\.mp3(?:\?v=\d+)?', "narration-16-zh-TW.mp3?v=3", html, count=1)
     duration = new_cues[-1][1]
     html = re.sub(r'max="[0-9.]+"', f'max="{duration}"', html, count=1)
     html = re.sub(r'id="total">\d+:\d+', f'id="total">{int(duration // 60)}:{int(duration % 60):02d}', html, count=1)
     html_path.write_text(html, encoding="utf-8")
-    print(f"Built i + PAS pronunciation and display-only number subtitles; duration {duration:.1f}s")
+    print(f"Built same-voice 愛帕斯 pronunciation and display-only number subtitles; duration {duration:.1f}s")
 
 
 if __name__ == "__main__":

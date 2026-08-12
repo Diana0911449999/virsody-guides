@@ -3,6 +3,7 @@ import re
 import subprocess
 import sys
 import wave
+from array import array
 from pathlib import Path
 
 
@@ -11,7 +12,7 @@ VOICE = "zh-TW-HsiaoChenNeural"
 RATE = "+10%"
 LETTER_RATE = "+20%"
 SAMPLE_RATE = 24000
-LETTER_GAP_MS = 45
+LETTER_GAP_MS = 0
 
 
 def run(*args):
@@ -39,6 +40,19 @@ def synthesize_pcm(text, stem, rate=RATE):
     return mp3_to_pcm(mp3_path, wav_path)
 
 
+def trim_edge_silence(pcm, threshold=180, keep_ms=8):
+    """Remove TTS padding while retaining a tiny natural consonant margin."""
+    samples = array("h")
+    samples.frombytes(pcm)
+    audible = [i for i, sample in enumerate(samples) if abs(sample) >= threshold]
+    if not audible:
+        return pcm
+    keep = int(SAMPLE_RATE * keep_ms / 1000)
+    start = max(0, audible[0] - keep)
+    end = min(len(samples), audible[-1] + keep + 1)
+    return samples[start:end].tobytes()
+
+
 def build_cue_pcm(text, cue_index):
     parts = re.split(r"(EMI)", text)
     pcm = bytearray()
@@ -50,12 +64,15 @@ def build_cue_pcm(text, cue_index):
             pcm.extend(synthesize_pcm(spoken, f"cue-{cue_index:02d}-{part_index:02d}"))
             continue
 
-        # Generate literal English letters as three independent clips. This
-        # guarantees E, M and I are articulated separately. Only a 45 ms gap
-        # is inserted, so the sequence remains smooth without a long pause.
+        # Generate literal English letters as three independent clips, then
+        # remove the leading/trailing padding added by TTS. No artificial gap
+        # is inserted, so E, M and I remain distinct but flow continuously.
         for letter_index, letter in enumerate(("E", "M", "I")):
-            pcm.extend(synthesize_pcm(letter, f"cue-{cue_index:02d}-{part_index:02d}-{letter}", LETTER_RATE))
-            if letter_index < 2:
+            letter_pcm = synthesize_pcm(
+                letter, f"cue-{cue_index:02d}-{part_index:02d}-{letter}", LETTER_RATE
+            )
+            pcm.extend(trim_edge_silence(letter_pcm))
+            if letter_index < 2 and LETTER_GAP_MS:
                 pcm.extend(b"\x00\x00" * int(SAMPLE_RATE * LETTER_GAP_MS / 1000))
     return bytes(pcm)
 
@@ -93,7 +110,7 @@ def main():
     audio_output = ROOT / "narration-06-zh-TW.mp3"
     run("ffmpeg", "-y", "-loglevel", "error", "-i", str(wav_output),
         "-codec:a", "libmp3lame", "-b:a", "96k", str(audio_output))
-    chinese["audio"] = audio_output.name + "?v=7"
+    chinese["audio"] = audio_output.name + "?v=8"
     chinese["cues"] = new_cues
 
     languages_path.write_text(
@@ -102,13 +119,13 @@ def main():
     )
     html_path = ROOT / "06.html"
     html = html_path.read_text(encoding="utf-8")
-    html = re.sub(r'languages-06\.js(?:\?v=\d+)?', "languages-06.js?v=7", html, count=1)
-    html = re.sub(r'narration-06-zh-TW\.mp3(?:\?v=\d+)?', "narration-06-zh-TW.mp3?v=7", html, count=1)
+    html = re.sub(r'languages-06\.js(?:\?v=\d+)?', "languages-06.js?v=8", html, count=1)
+    html = re.sub(r'narration-06-zh-TW\.mp3(?:\?v=\d+)?', "narration-06-zh-TW.mp3?v=8", html, count=1)
     duration = new_cues[-1][1]
     html = re.sub(r'max="[0-9.]+"', f'max="{duration}"', html, count=1)
     html = re.sub(r'id="total">\d+:\d+', f'id="total">{int(duration // 60)}:{int(duration % 60):02d}', html, count=1)
     html_path.write_text(html, encoding="utf-8")
-    print(f"Built literal E M I clips with {LETTER_GAP_MS} ms gaps; duration {duration:.1f}s")
+    print(f"Built tightly joined literal E M I clips after silence trimming; duration {duration:.1f}s")
 
 
 if __name__ == "__main__":

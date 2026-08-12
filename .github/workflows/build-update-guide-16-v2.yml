@@ -1,0 +1,33 @@
+name: Build corrected i PAS pronunciation for guide 16
+on:
+  push:
+    branches: [main]
+    paths:
+      - generate_update_16_v2.py
+      - .github/workflows/build-update-guide-16-v2.yml
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install audio and speech generators
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg
+          python -m pip install edge-tts
+      - name: Build Chinese narration and subtitles
+        run: python generate_update_16_v2.py
+      - name: Remove temporary sources
+        run: rm -f token-*.txt token-*.mp3 token-*.wav cue-*.txt cue-*.mp3 cue-*.wav narration-16-zh-TW-final.wav
+      - name: Commit corrected guide
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 16.html languages-16.js narration-16-zh-TW.mp3
+          git commit -m "Correct i PAS pronunciation and subtitles in guide 16"
+          git push
